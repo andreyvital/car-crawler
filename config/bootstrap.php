@@ -11,16 +11,10 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-spl_autoload_register(
-    function($className) {
-        $filename = strtr($className, '\\', DIRECTORY_SEPARATOR) . '.php';
-        foreach (explode(PATH_SEPARATOR, get_include_path()) as $path) {
-            $path .= DIRECTORY_SEPARATOR . $filename;
-            if (is_file($path)) {
-                require_once $path;
-                return true;
-            }
-        }
-        return false;
-    }
-);
+spl_autoload_register(function ($class) {
+  $filename = sprintf('%s.php', str_replace('\\', DS, $class));
+  
+  if (($class = stream_resolve_include_path($filename)) !== false) {
+    require $class;
+  }
+});

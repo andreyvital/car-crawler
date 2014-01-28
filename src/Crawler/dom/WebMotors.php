@@ -11,9 +11,9 @@ class WebMotors
     private $xpath;
     private $url = 'http://www.webmotors.com.br';
 
-    public function __construct(\DomDocument $document)
+    public function __construct()
     {
-        $this->document = $document;
+        $this->document = new \DomDocument();
         libxml_use_internal_errors(true);
         $this->document->loadHTMLFile($this->url);
         $this->xpath = new \DomXpath($this->document);

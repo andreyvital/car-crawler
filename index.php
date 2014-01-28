@@ -5,7 +5,7 @@ require 'config/bootstrap.php';
 use Crawler\http\CURL;
 use Crawler\dom\WebMotors;
 
-$wb = new WebMotors(new \DomDocument());
+$wb = new WebMotors();
 
 $pdo = new \PDO('mysql:host=localhost;dbname=boaproposta', 'root', '');
 

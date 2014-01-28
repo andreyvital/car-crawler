@@ -4,6 +4,9 @@ namespace Crawler\dom;
 
 use Crawler\http\CURL;
 
+use DOMDocument;
+use DOMXPath;
+
 class WebMotors
 {
 
@@ -13,10 +16,11 @@ class WebMotors
 
     public function __construct()
     {
-        $this->document = new \DomDocument();
         libxml_use_internal_errors(true);
+        
+        $this->document = new DOMDocument();
         $this->document->loadHTMLFile($this->url);
-        $this->xpath = new \DomXpath($this->document);
+        $this->xpath = new DOMXPath($this->document);
     }
 
     public function getBrands()

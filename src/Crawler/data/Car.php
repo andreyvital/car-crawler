@@ -10,23 +10,17 @@ class Car extends AbstractEntity
    * @var string
    */
   private $name;
-
-  /**
-   * Marca
-   * @var Brand
-   */
-  private $brand;
-
+  
   /**
    * Define o nome do veículo
    * 
    * @param string $name nome do carro
    * @param Brand $brand marca do veículo
    */
-  public function __construct($name, Brand $brand)
+  public function __construct($id, $name)
   {
     $this->name = $name;
-    $this->brand = $brand;
+    $this->setId($id);
   }
 
   /**
@@ -36,15 +30,6 @@ class Car extends AbstractEntity
   public function getName()
   {
     return $this->name;
-  }
-
-  /**
-   * Recupera a marca do automóvel
-   * @return Brand
-   */
-  public function getBrand()
-  {
-    return $this->brand;
   }
 
 }

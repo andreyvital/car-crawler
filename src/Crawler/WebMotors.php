@@ -4,9 +4,12 @@ namespace Crawler;
 
 use Crawler\CarIndustryAggregator;
 use Crawler\http\CURL;
+
 use Crawler\data\Brand;
 use Crawler\data\Car;
+
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 
 class WebMotors implements CarIndustryAggregator
@@ -22,6 +25,52 @@ class WebMotors implements CarIndustryAggregator
   {
     libxml_use_internal_errors(true);
   }
+  
+  /**
+   * Carrega o documento para extração das informações
+   * 
+   * @return DOMDocument
+   */
+  private function getDocument()
+  {
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    $dom->preserveWhiteSpace = true;
+    
+    $dom->loadHTMLFile(WebMotors::ENDPOINT);
+    return $dom;
+  }
+  
+  /**
+   * Converte o nó para sua representação
+   * 
+   * @param DOMElement $node nó
+   * @return Brand
+   */
+  private function node2brand(DOMElement $node)
+  {
+    return new Brand(
+      $node->getAttribute('value'), 
+      $node->nodeValue
+    );
+  }
+  
+  /**
+   * Recupera todos os carros de uma determinada marca
+   * 
+   * @param Brand $brand marca
+   * @return Brand
+   */
+  private function fetchCarsIntoBrand(Brand & $brand)
+  {
+    foreach ($this->getCars($brand) AS $vehicle) {
+      $car = new Car($vehicle->Id, $vehicle->Nome);
+      
+      // adiciona o carro para a marca específicada
+      $brand->addCar($car);
+    }
+    
+    return $brand;
+  }
 
   /**
    * Recupera todas as marcas
@@ -30,32 +79,33 @@ class WebMotors implements CarIndustryAggregator
    */
   public function getBrands()
   {
-    // ---------------------------------------
-    $dom = new DOMDocument('1.0', 'UTF-8');
-    $dom->preserveWhiteSpace = true;
-
-    $dom->loadHTMLFile(WebMotors::ENDPOINT);
-    $xpath = new DOMXPath($dom);
-    // ---------------------------------------
-
     $brands = array();
 
+    $xpath = new DOMXPath($this->getDocument());
+    
     foreach ($xpath->query('//*[@id="IdMarca"]/option[number(@value) > 0]') as $node) {
-      $brand = new Brand(
-        $node->getAttribute('value'), 
-        $node->nodeValue
-      );
-
-
-      foreach ($this->getCars($brand) AS $vehicle) {
-        $car = new Car($vehicle->Nome, $brand);
-        $car->setId($vehicle->Id);
-
-        $brand->addCar($car);
-      }
+      $brand = $this->node2brand($node);
+      $this->fetchCarsIntoBrand($brand);
     }
 
     return $brands;
+  }
+  
+  /**
+   * @see CarIndustryAggregator::getBrand()
+   * @param string $name nome da marca
+   */
+  public function getBrand($name)
+  {
+    $xpath = new DOMXPath($this->getDocument());
+    $node = $xpath->query(sprintf('//*[@id="IdMarca"]/option[text() = "%s"]', strtoupper($name)));
+    
+    if ($node->length >= 1) {
+      $brand = $this->node2brand($node->item(0));
+      return $this->fetchCarsIntoBrand($brand);
+    }
+    
+    return false;
   }
 
   /**

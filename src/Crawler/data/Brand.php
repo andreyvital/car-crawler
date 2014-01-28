@@ -16,5 +16,14 @@ class Brand extends AbstractEntity
     $this->setId($id);
     $this->name = $name;
   }
+  
+  /**
+   * Recupera o nome da marca
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->name;
+  }
 
 }

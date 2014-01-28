@@ -25,7 +25,7 @@ class WebMotors
 
     public function getBrands()
     {
-        return $this->xpath->query('//*[@id="IdMarca"]/option');
+        return $this->xpath->query('//*[@id="IdMarca"]/option[number(@value) = number(@value) and number(@value) > 0]');
     }
 
     public function getBrand($id)

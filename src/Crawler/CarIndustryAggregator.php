@@ -14,6 +14,7 @@ interface CarIndustryAggregator
   /**
    * Recupera a marca pelo nome
    * 
+   * @throws BrandNotFoundException se não encontrar informações para uma determinada marca
    * @param string $name nome da marca
    * @return Brand
    */

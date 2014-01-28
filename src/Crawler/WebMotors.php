@@ -2,6 +2,7 @@
 
 namespace Crawler;
 
+use Crawler\BrandNotFoundException;
 use Crawler\CarIndustryAggregator;
 use Crawler\http\CURL;
 
@@ -104,8 +105,9 @@ class WebMotors implements CarIndustryAggregator
       $brand = $this->node2brand($node->item(0));
       return $this->fetchCarsIntoBrand($brand);
     }
-    
-    return false;
+   
+    $message = sprintf('Não existem informações para a marca %s', $name);
+    throw new BrandNotFoundException($message);
   }
 
   /**

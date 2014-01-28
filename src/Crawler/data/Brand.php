@@ -2,7 +2,9 @@
 
 namespace Crawler\data;
 
-class Brand extends AbstractEntity
+use Crawler\CarIndustry;
+
+class Brand extends CarIndustry
 {
 
   /**
@@ -16,7 +18,7 @@ class Brand extends AbstractEntity
     $this->setId($id);
     $this->name = $name;
   }
-  
+
   /**
    * Recupera o nome da marca
    * @return string

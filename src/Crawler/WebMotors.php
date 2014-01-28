@@ -2,9 +2,10 @@
 
 namespace Crawler;
 
+use Crawler\http\CURL;
+
 use Crawler\BrandNotFoundException;
 use Crawler\CarIndustryAggregator;
-use Crawler\http\CURL;
 
 use Crawler\data\Brand;
 use Crawler\data\Car;

@@ -11,4 +11,12 @@ interface CarIndustryAggregator
    */
   public function getBrands();
 
+  /**
+   * Recupera a marca pelo nome
+   * 
+   * @param string $name nome da marca
+   * @return Brand
+   */
+  public function getBrand($name);
+
 }

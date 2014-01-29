@@ -23,7 +23,7 @@ class MariaDBBrandDataAccess extends AbstractMariaDBDataAccess implements BrandD
    */
   private function storeCar(Car $car, $brand)
   {
-    $stm = $this->dbh->prepare('INSERT INTO `cars`(`name`, `brand`) VALUES (:name, :brand);');
+    $stm = $this->dbh->prepare('INSERT INTO `cars`(`name`, `brand_id`) VALUES (:name, :brand);');
     $stm->bindValue(':name', $car->getName());
     $stm->bindValue(':brand', $brand, PDO::PARAM_INT);
     
@@ -39,9 +39,7 @@ class MariaDBBrandDataAccess extends AbstractMariaDBDataAccess implements BrandD
    */
   public function insert(Brand $brand)
   {
-    $transaction = $this->getTransactionManager();
     
-    if ($transaction->startTransaction()) {
       $stmt = $this->dbh->prepare('INSERT INTO `brands`(`name`) VALUES (:name);');
       $stmt->bindValue(':name', $brand->getName());
     
@@ -54,16 +52,12 @@ class MariaDBBrandDataAccess extends AbstractMariaDBDataAccess implements BrandD
             $this->storeCar($car, $id);
             
           } catch (Exception $e) {
-            $transaction->rollBack();
+            throw $e;
           }
         }
-        
-        if ($transaction->commit()) {
           return $id;
-        }
-      } 
     }
-    
+
     return 0;
   }
 

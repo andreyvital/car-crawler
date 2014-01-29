@@ -22,11 +22,11 @@ try {
 
 
   foreach ($wb->getBrands() as $brand) {
-    echo $brand->count();
+    printf('Adicionando em %s' . PHP_EOL, $brand->getName());
     $instance->insert($brand);
   }
 
   echo 'Finished!';  
 } catch (Exception $e) {
-  echo $e->getMessage();
+  echo $e->getTraceAsString();
 }

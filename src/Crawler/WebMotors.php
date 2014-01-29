@@ -88,6 +88,7 @@ class WebMotors implements CarIndustryAggregator
     foreach ($xpath->query('//*[@id="IdMarca"]/option[number(@value) > 0]') as $node) {
       $brand = $this->node2brand($node);
       $this->fetchCarsIntoBrand($brand);
+      $brands[] = $brand;
     }
 
     return $brands;

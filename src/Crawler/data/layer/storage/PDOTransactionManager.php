@@ -45,4 +45,13 @@ class PDOTransactionManager implements TransactionManager
     return $this->dbh->beginTransaction();
   }
 
+  /**
+   * @see TransactionManager::inTransaction()
+   * @return boolean
+   */
+  public function inTransaction()
+  {
+    return $this->dbh->inTransaction();
+  }
+
 }

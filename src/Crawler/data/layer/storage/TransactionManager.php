@@ -22,5 +22,11 @@ interface TransactionManager
    * @return boolean
    */
   public function rollBack();
+  
+  /**
+   * Determina se está em uma transação
+   * @return boolean
+   */
+  public function inTransaction();
 
 }

@@ -39,23 +39,30 @@ class MariaDBBrandDataAccess extends AbstractMariaDBDataAccess implements BrandD
    */
   public function insert(Brand $brand)
   {
+    $manager = $this->getTransactionManager();
     
-      $stmt = $this->dbh->prepare('INSERT INTO `brands`(`name`) VALUES (:name);');
-      $stmt->bindValue(':name', $brand->getName());
-    
-      if ($stmt->execute()) {
-        $id = $this->dbh->lastInsertId();
-      
-        foreach ($brand->getCars() AS $car) {
-          try {
-            // armazena as informações do veículo
-            $this->storeCar($car, $id);
-            
-          } catch (Exception $e) {
-            throw $e;
-          }
+    if ($manager->inTransaction() == false) 
+      $manager->startTransaction();
+
+    $stmt = $this->dbh->prepare('INSERT INTO `brands`(`name`) VALUES (:name);');
+    $stmt->bindValue(':name', $brand->getName());
+
+    if ($stmt->execute()) {
+      $id = $this->dbh->lastInsertId();
+
+      foreach ($brand->getCars() AS $car) {
+        try {
+          // armazena as informações do veículo
+          $this->storeCar($car, $id);
+
+        } catch (Exception $e) {
+          $manager->rollBack();
+          throw $e;
         }
-          return $id;
+      }
+      
+      $manager->commit();
+      return $id;
     }
 
     return 0;

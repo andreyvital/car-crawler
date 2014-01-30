@@ -8,8 +8,8 @@ ENGINE=InnoDB;
 CREATE TABLE IF NOT EXISTS `cars` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(90) NOT NULL,
-  `brand` INTEGER NOT NULL,
+  `brand_id` INTEGER NOT NULL,
   PRIMARY KEY(`id`),
   INDEX (`name`),
-  CONSTRAINT `brand` FOREIGN KEY (`brand`) REFERENCES `brands`(`id`) ON DELETE CASCADE)
+  CONSTRAINT `brand` FOREIGN KEY (`brand_id`) REFERENCES `brands`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;

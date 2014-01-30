@@ -1,9 +1,12 @@
 #!/usr/bin/env php
 
 <?php
-
 require 'config/bootstrap.php';
 
+const DB_NAME = 'test';
+const DB_PSWD = '1234';
+
+use \PDO;
 use Crawler\WebMotors;
 use Crawler\data\layer\storage\maria\MariaDBBrandDataAccess as BrandDataAccess;
 
@@ -11,14 +14,15 @@ try {
   $wb = new WebMotors();
 
   $instance = new BrandDataAccess(
-    new \PDO(
-      sprintf(
-        'mysql:host=%s;dbname=%s', 
-        'localhost', 
-        'boaproposta'), 
-        'root', 
-        ''
-        ));
+    new PDO(
+      'mysql:host=localhost;dbname='. DB_NAME, 
+      'root', 
+      DB_PSWD,
+      array(
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+      )
+    )
+  );
 
 
   foreach ($wb->getBrands() as $brand) {
@@ -26,7 +30,7 @@ try {
     $instance->insert($brand);
   }
 
-  echo 'Finished!';  
+  echo 'Finished!';
 } catch (Exception $e) {
-  echo $e->getTraceAsString();
+  echo $e->getMessage(), PHP_EOL;
 }

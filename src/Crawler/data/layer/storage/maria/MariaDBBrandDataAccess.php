@@ -61,8 +61,9 @@ class MariaDBBrandDataAccess extends AbstractMariaDBDataAccess implements BrandD
         }
       }
       
-      $manager->commit();
-      return $id;
+      if ($manager->commit()) {
+        return $id;
+      }
     }
 
     return 0;
